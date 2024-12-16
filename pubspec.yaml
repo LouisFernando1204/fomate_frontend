@@ -67,6 +67,9 @@ flutter:
   assets:
     - assets/images/FomateLogo.png
     - assets/images/BlueAvatar.png
+    - assets/images/Fomate.png
+    - assets/images/ContentVideo.png
+    - assets/images/check.png
 
   fonts:
     - family: ProzaLibre
