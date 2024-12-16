@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:fomate_frontend/view/pages/pages.dart';
+import 'package:fomate_frontend/background_service.dart';
+import 'package:fomate_frontend/view/pages/home_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
+  await initializeService();
   runApp(const MyApp());
 }
 
@@ -12,6 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -32,7 +42,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoadingPageLogo(),
+      home: HomePage(),
     );
   }
 }
