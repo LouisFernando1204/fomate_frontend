@@ -7,39 +7,32 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   final List<AppModel> apps = [];
   Timer? _timer;
-  String? _currentApp;
-  Map<String, DateTime> appStartTimes = {}; // Waktu mulai aplikasi digunakan
-  int timerDuration = 5; // durasi timer dalam menit
-
-  // Variabel untuk melacak status aplikasi
+  Map<String, DateTime> appStartTimes = {};
+  int timerDuration = 5;
   bool isMonitoring = false;
 
-  // Untuk notifikasi
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   TimerViewModel() {
-    WidgetsBinding.instance.addObserver(this); // Menambahkan observer
+    WidgetsBinding.instance.addObserver(this);
     _initializeNotifications();
   }
 
-  // Inisialisasi pengaturan notifikasi
   void _initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings(
-            '@drawable/fomate_logo'); // Gunakan nama file yang baru
+        AndroidInitializationSettings('@drawable/fomate_logo');
 
     final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: initializationSettingsAndroid, iOS: null, macOS: null);
+        InitializationSettings(android: initializationSettingsAndroid);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance
-        .removeObserver(this); // Menghapus observer saat widget dibuang
+    WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -47,127 +40,123 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       // Aplikasi kembali ke foreground, mulai monitoring
-      startMonitoring();
+      stopMonitoring();
     } else if (state == AppLifecycleState.paused) {
       // Aplikasi masuk ke background, tetapi tetap memantau penggunaan aplikasi
-      // Tidak perlu menghentikan monitoring, cukup pastikan monitoring tetap berjalan
-      if (!isMonitoring) {
-        startMonitoring();
-      }
+      startMonitoring();
     }
   }
 
-  // Fungsi untuk memulai pemantauan
-  Future<void> startMonitoring() async {
-    if (isMonitoring)
-      return; // Jika sudah mulai monitoring, tidak perlu diulang
-
-    print("Monitoring started");
+  void startMonitoring() async {
+    if (isMonitoring) return;
     isMonitoring = true;
 
+    print("Monitoring started");
+
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       final now = DateTime.now();
       final appUsage = await AppUsage().getAppUsage(
-        now.subtract(Duration(minutes: timerDuration)),
+        now.subtract(const Duration(seconds: 1)),
         now,
       );
+      print("APP USAGE: " + appUsage.toString());
 
       if (appUsage.isNotEmpty) {
-        final appName = appUsage.last.packageName;
+        AppUsageInfo? currentApp;
 
-        // Cari aplikasi yang digunakan
-        final currentAppModel = apps.firstWhere(
-          (app) => app.packageName == appName,
-          orElse: () => AppModel(packageName: appName, name: appName),
-        );
-
-        if (currentAppModel != null) {
-          // Periksa waktu awal penggunaan
-          if (!appStartTimes.containsKey(appName)) {
-            appStartTimes[appName] = now;
+        for (var usage in appUsage) {
+          if (apps.any((app) => app.name == usage.appName)) {
+            currentApp = usage;
+            break;
           }
+        }
 
-          // Hitung total waktu penggunaan
-          final startTime = appStartTimes[appName]!;
+        if (currentApp != null) {
+          final currentAppName = currentApp.appName;
+          print("CURRENT APP: " + currentAppName);
+
+          appStartTimes[currentAppName] ??= now;
+
+          final startTime = appStartTimes[currentAppName]!;
+          print("START TIME: " + startTime.toString());
           final usageDuration = now.difference(startTime).inMinutes;
+          print("USAGE DURATION: " + usageDuration.toString());
 
-          // Perbarui model aplikasi
-          currentAppModel.totalUsage = usageDuration; // dalam menit
-          notifyListeners();
-
-          // Tampilkan notifikasi jika waktu habis
           if (usageDuration >= timerDuration) {
-            _showNotification(appName);
-            appStartTimes.remove(appName); // Hapus agar tidak berulang
+            print("CURRENT APP FINAL: " + currentAppName);
+            await _showNotification(currentAppName, usageDuration);
           }
         }
       }
     });
   }
 
-  // Menampilkan notifikasi saat timer habis
-  void _showNotification(String appName) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'Channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Timer Habis',
-      'Waktu penggunaan aplikasi $appName telah habis!',
-      platformChannelSpecifics,
-    );
-  }
-
-  // Fungsi untuk menghentikan pemantauan
   void stopMonitoring() {
+    if (!isMonitoring) return;
+
     print("Monitoring stopped");
     _timer?.cancel();
     isMonitoring = false;
-  }
 
-  // Fungsi untuk mengecek apakah aplikasi sudah melebihi durasi timer yang ditetapkan
-  void checkAppUsage() {
-    for (var app in apps) {
-      if (app.totalUsage >= timerDuration) {
-        // Cek dalam menit
-        app.isWithinLimit = true;
-      } else {
-        app.isWithinLimit = false;
-      }
+    for (final appName in appStartTimes.keys) {
+      final startTime = appStartTimes[appName]!;
+      print("Start time: ${startTime}");
+
+      final usageDuration = DateTime.now().difference(startTime).inMinutes;
+      print("USAGE DURATION (in minutes): $usageDuration");
+
+      final app = apps.firstWhere(
+        (app) => app.name == appName,
+        orElse: () => AppModel(packageName: appName, name: appName),
+      );
+
+      app.updateUsageDuration(usageDuration);
+
+      print("APP NAME: " + app.name);
+      print("APP USAGE DURATION: " + app.usageDuration.toString());
+
+      removeApp(app);
     }
+
+    appStartTimes.clear();
+    print("APP START TIMES: " + appStartTimes.toString());
+
     notifyListeners();
   }
 
-  // Menambahkan aplikasi yang dipilih dan mengatur timer
-  void setTimerDuration(int duration) {
-    timerDuration = duration;
-    notifyListeners();
+  Future<void> _showNotification(String appName, int usageDuration) async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails('usage_timer_channel', 'Usage Timer',
+            channelDescription: 'Notification for application usage time limit',
+            importance: Importance.max,
+            priority: Priority.high);
+
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidDetails);
+
+    await Future.delayed(const Duration(seconds: 10));
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Friendly Reminder!',
+      'You\'ve been using $appName for ${usageDuration.toString()} minute(s)!',
+      notificationDetails,
+    );
   }
 
-  int getTimerDuration() {
-    return timerDuration;
-  }
-
-  // Tambahkan aplikasi yang dipilih dan mulai monitoring
   void addApp(AppModel app) {
     apps.add(app);
-    startMonitoring(); // Mulai monitoring saat aplikasi ditambahkan
     notifyListeners();
   }
 
-  // Hapus aplikasi dan hentikan monitoring jika perlu
   void removeApp(AppModel app) {
     apps.remove(app);
+    notifyListeners();
+  }
+
+  void setTimerDuration(int duration) {
+    timerDuration = duration;
     notifyListeners();
   }
 }

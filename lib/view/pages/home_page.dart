@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:fomate_frontend/model/app_model.dart';
 import 'package:fomate_frontend/viewmodel/timer_viewmodel.dart';
 import 'package:fomate_frontend/utils/colors.dart';
-import 'package:fomate_frontend/background_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,11 +12,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final viewModel = TimerViewModel();
-
   Map<String, bool> selectedApps = {
-    'Instagram': false,
-    'YouTube': false,
-    'TikTok': false,
+    'instagram': false,
+    'youtube': false,
+    'tiktok': false,
   };
 
   int timerDuration = 5;
@@ -27,42 +23,27 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    initializeService(); // Inisialisasi service saat HomePage dimulai
+    viewModel.addListener(_onViewModelChange);
+  }
+
+  @override
+  void dispose() {
+    viewModel.removeListener(_onViewModelChange);
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  void _onViewModelChange() {
+    setState(() {});
   }
 
   Future<void> _saveSelectedApps() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> selectedAppNames = selectedApps.entries
-        .where((entry) => entry.value)
-        .map((entry) => entry.key)
-        .toList();
-
-    await prefs.setStringList('selectedApps', selectedAppNames);
-    await prefs.setInt('timerDuration', timerDuration);
-  }
-
-  void _startBackgroundService() async {
-    final service = FlutterBackgroundService();
-    if (!(await service.isRunning())) {
-      service.startService();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Background service dimulai!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Service sudah berjalan.')),
-      );
-    }
-  }
-
-  void _stopBackgroundService() async {
-    final service = FlutterBackgroundService();
-    if (await service.isRunning()) {
-      service.invoke("stopService");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Background service dihentikan!')),
-      );
-    }
+    viewModel.apps.clear();
+    selectedApps.forEach((appName, isSelected) {
+      if (isSelected) {
+        viewModel.addApp(AppModel(name: appName, packageName: appName));
+      }
+    });
   }
 
   void _showBottomModal(BuildContext context) {
@@ -78,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    "Aplikasi",
+                    "Social Media App",
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 16,
@@ -89,7 +70,8 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     children: selectedApps.keys.map((appName) {
                       return CheckboxListTile(
-                        title: Text(appName,
+                        title: Text(
+                            appName[0].toUpperCase() + appName.substring(1),
                             style: const TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
@@ -107,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    "Durasi (jam)",
+                    "Duration (minutes)",
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 16,
@@ -153,7 +135,9 @@ class _HomePageState extends State<HomePage> {
                           backgroundColor: AppColors.secondaryColor,
                         ),
                         onPressed: () async {
-                          await _saveSelectedApps(); // Simpan aplikasi yang dipilih dan durasi timer
+                          await _saveSelectedApps();
+                          viewModel.setTimerDuration(
+                              timerDuration); // Atur durasi awal
                           Navigator.pop(context);
                         },
                         child: const Text("Set Timer",
@@ -176,62 +160,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Fomate")),
-      body: SingleChildScrollView(
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secondaryColor,
-                    ),
-                    onPressed: () => _showBottomModal(context),
-                    child: const Text("Pilih Aplikasi dan Timer",
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textColor_0)),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _startBackgroundService,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Mulai Service'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _stopBackgroundService,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    child: const Text('Hentikan Service'),
-                  ),
-                ],
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryColor,
               ),
-            ),
-            SizedBox(
-              height: 200,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: viewModel.apps.length,
-                itemBuilder: (context, index) {
-                  final app = viewModel.apps[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(app.name),
-                      subtitle: Text(
-                          "Durasi Timer: ${viewModel.getTimerDuration()} menit\nStatus: ${app.isWithinLimit ? 'Dalam Batas' : 'Luar Batas'}",
-                          style: const TextStyle(
-                              fontSize: 12, color: AppColors.textColor_1)),
-                    ),
-                  );
-                },
-              ),
+              onPressed: () => _showBottomModal(context),
+              child: const Text("Arrange your schedule",
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textColor_0)),
             ),
           ],
         ),

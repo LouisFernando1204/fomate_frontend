@@ -1,14 +1,15 @@
 class AppModel {
-  final String name;
   final String packageName;
-  int totalUsage; // Total penggunaan dalam detik
-  bool
-      isWithinLimit; // Menyimpan status apakah penggunaan sesuai timer atau tidak
+  final String name;
+  int usageDuration;
 
   AppModel({
-    required this.name,
     required this.packageName,
-    this.totalUsage = 0,
-    this.isWithinLimit = true, // default true
+    required this.name,
+    this.usageDuration = 0,
   });
+
+  void updateUsageDuration(int duration) {
+    usageDuration += duration;
+  }
 }
