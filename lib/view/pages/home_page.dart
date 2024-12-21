@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final viewModel = TimerViewModel();
   Map<String, bool> selectedApps = {
     'instagram': false,
@@ -23,11 +23,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     viewModel.addListener(_onViewModelChange);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     viewModel.removeListener(_onViewModelChange);
     viewModel.dispose();
     super.dispose();
@@ -35,6 +37,11 @@ class _HomePageState extends State<HomePage> {
 
   void _onViewModelChange() {
     setState(() {});
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    viewModel.didChangeAppLifecycleState(state);
   }
 
   Future<void> _saveSelectedApps() async {
@@ -47,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showBottomModal(BuildContext context) {
+    String? selectedApp;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -66,26 +74,40 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         color: AppColors.textColor_1),
                   ),
-                  const SizedBox(height: 4),
-                  Column(
-                    children: selectedApps.keys.map((appName) {
-                      return CheckboxListTile(
-                        title: Text(
-                            appName[0].toUpperCase() + appName.substring(1),
-                            style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                                color: AppColors.textColor_1)),
-                        value: selectedApps[appName],
-                        onChanged: (bool? value) {
-                          setModalState(() {
-                            selectedApps[appName] = value ?? false;
-                          });
-                        },
-                        activeColor: AppColors.secondaryColor,
+                  const SizedBox(height: 12),
+                  DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedApp,
+                    hint: const Text(
+                      "Select an App",
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.textColor_1),
+                    ),
+                    items: selectedApps.keys.map((String appName) {
+                      return DropdownMenuItem<String>(
+                        value: appName,
+                        child: Text(
+                          appName[0].toUpperCase() + appName.substring(1),
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.textColor_1,
+                          ),
+                        ),
                       );
                     }).toList(),
+                    onChanged: (String? newValue) {
+                      setModalState(() {
+                        selectedApp = newValue;
+                        selectedApps.forEach((key, value) {
+                          selectedApps[key] = key == selectedApp;
+                        });
+                      });
+                    },
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -129,24 +151,27 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.secondaryColor,
-                        ),
-                        onPressed: () async {
-                          await _saveSelectedApps();
-                          viewModel.setTimerDuration(
-                              timerDuration); // Atur durasi awal
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Set Timer",
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.textColor_0)),
-                      ))
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.secondaryColor,
+                      ),
+                      onPressed: () async {
+                        await _saveSelectedApps();
+                        viewModel.setTimerDuration(timerDuration);
+                        timerDuration = 5;
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Set Timer",
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textColor_0),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
