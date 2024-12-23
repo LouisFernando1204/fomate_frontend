@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fomate_frontend/view/pages/pages.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure binding is initialized for async operations
+
   runApp(const MyApp());
 }
 

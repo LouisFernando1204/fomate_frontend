@@ -3,6 +3,14 @@ part of 'pages.dart';
 class ContentDetailpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final YoutubePlayerController _controller = YoutubePlayerController(
+      initialVideoId: 'aHku2K9G89M', // Replace with your YouTube video ID
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -12,7 +20,7 @@ class ContentDetailpage extends StatelessWidget {
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: AppColors.textColor_0, // Menetapkan warna putih pada ikon
+            color: AppColors.textColor_0, 
           ),
         ),
         title: const Text(
@@ -32,9 +40,13 @@ class ContentDetailpage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Center(
-                child: Image.asset(
-                  'assets/images/ContentVideo.png',
-                  height: 200,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0), 
+                  child: YoutubePlayer(
+                    controller: _controller,
+                    showVideoProgressIndicator: true,
+                    progressIndicatorColor: AppColors.primaryColor,
+                  ),
                 ),
               ),
               SizedBox(height: 20),
@@ -93,7 +105,7 @@ class ContentDetailpage extends StatelessWidget {
     return Container(
       child: Padding(
         padding:
-            const EdgeInsets.symmetric(vertical: 5.0), // Add vertical spacing
+            const EdgeInsets.symmetric(vertical: 5.0), 
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,17 +114,16 @@ class ContentDetailpage extends StatelessWidget {
               color: Colors.green,
               size: 22,
             ),
-            const SizedBox(width: 8), // Adjust spacing between icon and text
+            const SizedBox(width: 8),
             Expanded(
-              // Ensures the text wraps within the available width
               child: Text(
                 title,
                 style: const TextStyle(
-                  color: Colors.grey, // Light grey color for the text
-                  fontFamily: 'Poppins', // Font family
+                  color: AppColors.textColor_2, 
+                  fontFamily: 'Poppins',
                   fontWeight:
-                      FontWeight.w400, // Regular weight for a subtle look
-                  fontSize: 14, // Font size matching the image
+                      FontWeight.w400,
+                  fontSize: 14, 
                 ),
               ),
             ),
