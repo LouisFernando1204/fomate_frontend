@@ -20,34 +20,38 @@ class _PricePageState extends State<PricePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Color(0xFF48CAE4),
+        backgroundColor: AppColors.primaryColor,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: Colors.white, // Menetapkan warna putih pada ikon
+            color: AppColors.textColor_0, // Menetapkan warna putih pada ikon
           ),
         ),
         title: const Text(
           "Pricing",
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textColor_0,
+            fontFamily: 'Poppins',
+            fontSize: 22,
           ),
         ),
       ),
-      body: ChangeNotifierProvider<PricingViewmodel>(
-        create: (_) => pricingViewmodel,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildPricingCard(
+      body: Container(
+        color: Colors.white, // Set the background color to white
+        child: ChangeNotifierProvider<PricingViewmodel>(
+          create: (_) => pricingViewmodel,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildPricingCard(
                     title: "Lifetime Deal",
-                    titleColor: Colors.black,
+                    titleColor: AppColors.textColor_1,
                     price: "Rp. 149.900,00",
                     description:
                         "Unlock full educational content, exclusive articles, and videos.",
@@ -55,15 +59,16 @@ class _PricePageState extends State<PricePage> {
                       "Unlimited Video Access: Watch exclusive educational videos on digital wellness and social media management.",
                       "Practical Strategies: Discover actionable techniques to manage screen time and build healthier digital habits."
                     ],
-                    color: Color(0xFF48CAE4),
-                    textColor: Colors.white,
-                    checkCircleColor: Colors.black,
-                    dividerColor: Colors.white,
-                    buttonContentColor: Color(0xFF48CAE4)),
-                const SizedBox(height: 16),
-                _buildPricingCard(
+                    color: AppColors.primaryColor,
+                    textColor: AppColors.textColor_0,
+                    checkCircleColor: AppColors.textColor_1,
+                    dividerColor: AppColors.textColor_0,
+                    buttonContentColor: AppColors.primaryColor,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildPricingCard(
                     title: "Single Deal",
-                    titleColor: Colors.black,
+                    titleColor: AppColors.textColor_1,
                     price: "Rp. 79.900,00",
                     description:
                         "Unlock one selected educational content, including a video and article, to boost your well-being.",
@@ -71,13 +76,15 @@ class _PricePageState extends State<PricePage> {
                       "Single Video Access: Watch an exclusive video on topics like digital wellness or social media management.",
                       "Practical Insights: Learn actionable tips and strategies to manage screen time and build healthier habits."
                     ],
-                    color: Colors.white,
-                    textColor: Color(0xFF48CAE4),
-                    dividerColor: Colors.black,
-                    checkCircleColor: Colors.black,
-                    borderColor: Color(0xFF48CAE4),
-                    buttonContentColor: Colors.white),
-              ],
+                    color: AppColors.textColor_0,
+                    textColor: AppColors.primaryColor,
+                    dividerColor: AppColors.textColor_1,
+                    checkCircleColor: AppColors.textColor_1,
+                    borderColor: AppColors.primaryColor,
+                    buttonContentColor: AppColors.textColor_0,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -101,24 +108,21 @@ class _PricePageState extends State<PricePage> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        // Cek jika judul adalah "Lifetime Deal", gunakan gradient
         gradient: title == "Lifetime Deal"
             ? LinearGradient(
-                colors: [Color(0xFF48CAE4), Color(0xFF023E8A)],
+                colors: [AppColors.primaryColor, AppColors.secondaryColor],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               )
             : null,
-        color: title != "Lifetime Deal"
-            ? color
-            : null, // Tetapkan color jika bukan Lifetime Deal
+        color: title != "Lifetime Deal" ? color : null,
         borderRadius: BorderRadius.circular(12.0),
         border: borderColor != null
             ? Border.all(color: borderColor, width: 1.5)
             : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColors.textColor_1.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -131,15 +135,14 @@ class _PricePageState extends State<PricePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(
-                    8.0), // Memberikan jarak di dalam container
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: Color(0xFF252525), // Warna latar belakang hitam
-                  borderRadius: BorderRadius.circular(18.0), // Sudut melengkung
+                  color: AppColors.textColor_1,
+                  borderRadius: BorderRadius.circular(18.0),
                 ),
                 child: Icon(
                   Icons.lock_open,
-                  color: Color(0xFF48CAE4),
+                  color: AppColors.primaryColor,
                   size: 32.0,
                 ),
               ),
@@ -148,7 +151,8 @@ class _PricePageState extends State<PricePage> {
                 title,
                 style: TextStyle(
                   color: titleColor,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
                   fontSize: 16.0,
                 ),
               ),
@@ -159,7 +163,8 @@ class _PricePageState extends State<PricePage> {
             price,
             style: TextStyle(
               color: textColor,
-              fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w900,
               fontSize: 24.0,
             ),
           ),
@@ -168,6 +173,7 @@ class _PricePageState extends State<PricePage> {
             description,
             style: TextStyle(
               color: textColor.withOpacity(0.9),
+              fontFamily: 'Poppins',
               fontSize: 14.0,
             ),
           ),
@@ -193,11 +199,27 @@ class _PricePageState extends State<PricePage> {
                         ),
                         const SizedBox(width: 8.0),
                         Expanded(
-                          child: Text(
-                            feature,
-                            style: TextStyle(
-                              color: textColor.withOpacity(0.9),
-                              fontSize: 14.0,
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: feature.split(":")[0] + ": ",
+                                  style: TextStyle(
+                                    color: textColor.withOpacity(0.9),
+                                    fontSize: 14.0,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: feature.split(":")[1],
+                                  style: TextStyle(
+                                    color: textColor.withOpacity(0.9),
+                                    fontSize: 14.0,
+                                    fontFamily: 'Poppins',
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -224,7 +246,6 @@ class _PricePageState extends State<PricePage> {
                     }
                   } catch (e) {
                     print("Terjadi kesalahan saat melakukan pembelian: $e");
-                    // Menangani error atau memberikan feedback ke pengguna
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -238,7 +259,8 @@ class _PricePageState extends State<PricePage> {
                   "Purchase",
                   style: TextStyle(
                     color: buttonContentColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ),
