@@ -12,7 +12,7 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF48CAE4),
+        backgroundColor: AppColors.primaryColor,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -20,14 +20,15 @@ class _ContentPageState extends State<ContentPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(Icons.arrow_back, color: Colors.white),
+              child: Icon(Icons.arrow_back, color: AppColors.textColor_0),
             ),
             SizedBox(width: 8),
-            Text("Content", style: TextStyle(color: Colors.white))
+            Text("Content", style: TextStyle(color: AppColors.textColor_0))
           ],
         ),
       ),
       body: Container(
+        color: AppColors.backgroundColor, // Background color added here
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -38,34 +39,45 @@ class _ContentPageState extends State<ContentPage> {
                   children: [
                     Text(
                       "Explore Insights",
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
                 // Preview Kartu
-                CustomCard(
-                  imageUrl:
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
-                  title: "How to Reduce Gadget Addiction (Dopamine Detox)",
-                  description:
-                      "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
-                  duration: "6 min",
-                ),
-                CustomCard(
-                  imageUrl:
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
-                  title: "How to Reduce Gadget Addiction (Dopamine Detox)",
-                  description:
-                      "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
-                  duration: "6 min",
-                ),
-                CustomCard(
-                  imageUrl:
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
-                  title: "How to Reduce Gadget Addiction (Dopamine Detox)",
-                  description:
-                      "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
-                  duration: "6 min",
+                Column(
+                  children: [
+                    CustomCard(
+                      imageUrl:
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
+                      title: "How to Reduce Gadget Addiction (Dopamine Detox)",
+                      description:
+                          "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
+                      duration: "6 min",
+                    ),
+                    SizedBox(height: 8), // Space between cards
+                    CustomCard(
+                      imageUrl:
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
+                      title: "How to Reduce Gadget Addiction (Dopamine Detox)",
+                      description:
+                          "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
+                      duration: "6 min",
+                    ),
+                    SizedBox(height: 8), // Space between cards
+                    CustomCard(
+                      imageUrl:
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRU_XT_6fSIzb7tSfe1PazMka6T58PTvyH3A&s',
+                      title: "How to Reduce Gadget Addiction (Dopamine Detox)",
+                      description:
+                          "Learn how dopamine detox helps you reset your brain, reduce gadget dependence, and regain focus.",
+                      duration: "6 min",
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -82,7 +94,7 @@ class _ContentPageState extends State<ContentPage> {
     required String duration,
   }) {
     return Card(
-      color: Colors.white,
+      color: AppColors.textColor_0,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -107,25 +119,34 @@ class _ContentPageState extends State<ContentPage> {
                 SizedBox(height: 8),
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
                   description,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    color: AppColors.textColor_2,
+                    fontSize: 12,
+                  ),
                 ),
                 SizedBox(height: 12),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: AppColors.textColor_1,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     duration,
                     style: TextStyle(
-                      color: Color(0xFF48CAE4),
-                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
                   ),
