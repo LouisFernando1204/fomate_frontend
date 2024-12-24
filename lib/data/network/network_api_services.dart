@@ -12,11 +12,8 @@ class NetworkApiServices implements BaseApiServices {
   Future<dynamic> getApiResponse(String endpoint) async {
     dynamic responseJson;
     try {
-      final response = await http.get(Uri.https(Const.baseUrl, endpoint),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'key': Const.apiKey
-          });
+      final response = await http.get(Uri.http(Const.baseUrl, endpoint),
+          headers: <String, String>{'Content-Type': 'application/json;'});
       responseJson = returnResponse(response);
       return responseJson;
     } on SocketException {
@@ -35,8 +32,7 @@ class NetworkApiServices implements BaseApiServices {
       final response = await http.post(
         Uri.https(Const.baseUrl, endpoint),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'key': Const.apiKey,
+          'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(data),
       );

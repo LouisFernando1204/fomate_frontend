@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fomate_frontend/view/pages/home_page.dart';
+import 'package:fomate_frontend/view/pages/pages.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -12,8 +15,32 @@ Future<void> main() async {
       Permission.notification.request();
     }
   });
-  runApp(MyApp());
+  await initializeDateFormatting('id_ID', null);
+  runApp(MaterialApp.router(routerConfig: router));
 }
+
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      name: 'Loading Page',
+      builder: (context, state) => const ContentListPage(),
+    ),
+    GoRoute(
+      path: '/content_list',
+      name: 'Content List Page',
+      builder: (context, state) => const ContentListPage(),
+    ),
+    // GoRoute(
+    //   path: '/content_detail',
+    //   name: 'Content Detail Page',
+    //   builder: (context, state) {
+    //     Content content = state.extra as Content;
+    //     return ContentDetailPage(content: content);
+    //   },
+    // ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
