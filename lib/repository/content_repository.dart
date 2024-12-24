@@ -1,13 +1,12 @@
-import 'package:fomate_frontend/data/network/network_api_services.dart';
-import 'package:fomate_frontend/model/model.dart';
+part of 'repository.dart';
 
 class ContentRepository {
   final _apiServices = NetworkApiServices();
 
-  Future<List<Content>> fetchAllContent() async {
+  Future<List<Content>> fetchAllContent(String userId) async {
     try {
       dynamic unpurchasedResponse = await _apiServices.getApiResponse(
-          '/api/get_unpurchased_content/676a498e14808629f4d44778');
+          '/api/get_unpurchased_content/${userId}');
       List<Content> unpurchasedContent = [];
       if (unpurchasedResponse != null) {
         unpurchasedContent = (unpurchasedResponse as List)
@@ -17,7 +16,7 @@ class ContentRepository {
       }
 
       dynamic purchasedResponse = await _apiServices.getApiResponse(
-          '/api/get_purchased_content/676a498e14808629f4d44778');
+          '/api/get_purchased_content/${userId}');
       List<Content> purchasedContent = [];
       if (purchasedResponse != null) {
         purchasedContent = (purchasedResponse as List)
@@ -33,6 +32,56 @@ class ContentRepository {
     } catch (e) {
       print("An error occurred: $e");
       throw Exception('Error fetching content: $e');
+    }
+  }
+
+  Future<List<String>> purchaseAllContent(String userId) async {
+    try {
+      Map<String, dynamic> requestBody = {
+        "userId": userId,
+      };
+
+      dynamic response = await _apiServices.postApiResponse(
+        '/api/purchase_all_content',
+        requestBody,
+      );
+
+      if (response != null && response['InsertedIDs'] != null) {
+        List<String> insertedIds = List<String>.from(response['InsertedIDs']);
+        print("All content successfully purchased with IDs: $insertedIds");
+        return insertedIds;
+      } else {
+        throw Exception(
+            response['message'] ?? 'Failed to purchase all content.');
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+      throw Exception('Error purchasing all content: $e');
+    }
+  }
+
+  Future<String> purchaseContent(String userId, String contentId) async {
+    try {
+      Map<String, dynamic> requestBody = {
+        "userId": userId,
+        "contentId": contentId
+      };
+
+      dynamic response = await _apiServices.postApiResponse(
+        '/api/purchase_content',
+        requestBody,
+      );
+
+      if (response != null && response['InsertedID'] != null) {
+        String insertedId = response['InsertedID'];
+        print("Content successfully purchased with ID: $insertedId");
+        return insertedId;
+      } else {
+        throw Exception(response['message'] ?? 'Failed to purchase content.');
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+      throw Exception('Error purchasing content: $e');
     }
   }
 }

@@ -12,7 +12,7 @@ class _ContentListPageState extends State<ContentListPage> {
 
   @override
   void initState() {
-    contentViewModel.getContentList();
+    contentViewModel.getContentList("676a498e14808629f4d44778");
     super.initState();
   }
 
@@ -22,18 +22,22 @@ class _ContentListPageState extends State<ContentListPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back, color: AppColors.textColor_0),
-            ),
-            SizedBox(width: 8),
-            Text("Content", style: TextStyle(color: AppColors.textColor_0)),
-          ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: AppColors.textColor_0,
+          ),
+        ),
+        title: const Text(
+          "Content",
+          style: TextStyle(
+            color: AppColors.textColor_0,
+            fontFamily: 'Poppins',
+            fontSize: 20,
+          ),
         ),
       ),
       body: ChangeNotifierProvider<ContentViewModel>(

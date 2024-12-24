@@ -1,110 +1,59 @@
-part of 'pages.dart';
+part of 'widgets.dart';
 
-class PricePage extends StatefulWidget {
-  const PricePage({super.key});
+class PricingCard extends StatefulWidget {
+  final String title;
+  final Color titleColor;
+  final String price;
+  final String description;
+  final List<String> features;
+  final Color color;
+  final Color textColor;
+  final Color dividerColor;
+  final Color checkCircleColor;
+  final Color? borderColor;
+  final Color buttonContentColor;
+  final Content content;
+  final String userId;
+  final ContentViewModel contentViewModel;
+  const PricingCard(
+    this.title,
+    this.titleColor,
+    this.price,
+    this.description,
+    this.features,
+    this.color,
+    this.textColor,
+    this.dividerColor,
+    this.checkCircleColor,
+    this.borderColor,
+    this.buttonContentColor,
+    this.content,
+    this.userId,
+    this.contentViewModel,
+  );
 
   @override
-  State<PricePage> createState() => _PricePageState();
+  State<PricingCard> createState() => _PricingCardState();
 }
 
-class _PricePageState extends State<PricePage> {
-  PricingViewmodel pricingViewmodel = PricingViewmodel();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _PricingCardState extends State<PricingCard> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.textColor_0, // Menetapkan warna putih pada ikon
-          ),
-        ),
-        title: const Text(
-          "Pricing",
-          style: TextStyle(
-            color: AppColors.textColor_0,
-            fontFamily: 'Poppins',
-            fontSize: 22,
-          ),
-        ),
-      ),
-      body: Container(
-        color: Colors.white, // Set the background color to white
-        child: ChangeNotifierProvider<PricingViewmodel>(
-          create: (_) => pricingViewmodel,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildPricingCard(
-                    title: "Lifetime Deal",
-                    titleColor: AppColors.textColor_1,
-                    price: "Rp. 149.900,00",
-                    description:
-                        "Unlock full educational content, exclusive articles, and videos.",
-                    features: [
-                      "Unlimited Video Access: Watch exclusive educational videos on digital wellness and social media management.",
-                      "Practical Strategies: Discover actionable techniques to manage screen time and build healthier digital habits."
-                    ],
-                    color: AppColors.primaryColor,
-                    textColor: AppColors.textColor_0,
-                    checkCircleColor: AppColors.textColor_1,
-                    dividerColor: AppColors.textColor_0,
-                    buttonContentColor: AppColors.primaryColor,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildPricingCard(
-                    title: "Single Deal",
-                    titleColor: AppColors.textColor_1,
-                    price: "Rp. 79.900,00",
-                    description:
-                        "Unlock one selected educational content, including a video and article, to boost your well-being.",
-                    features: [
-                      "Single Video Access: Watch an exclusive video on topics like digital wellness or social media management.",
-                      "Practical Insights: Learn actionable tips and strategies to manage screen time and build healthier habits."
-                    ],
-                    color: AppColors.textColor_0,
-                    textColor: AppColors.primaryColor,
-                    dividerColor: AppColors.textColor_1,
-                    checkCircleColor: AppColors.textColor_1,
-                    borderColor: AppColors.primaryColor,
-                    buttonContentColor: AppColors.textColor_0,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+    String title = widget.title;
+    Color titleColor = widget.titleColor;
+    String price = widget.price;
+    String description = widget.description;
+    List<String> features = widget.features;
+    Color color = widget.color;
+    Color textColor = widget.textColor;
+    Color dividerColor = widget.dividerColor;
+    Color checkCircleColor = widget.checkCircleColor;
+    Color borderColor = widget.borderColor!;
+    Color buttonContentColor = widget.buttonContentColor;
+    Content content = widget.content;
+    String userId = widget.userId;
+    ContentViewModel contentViewModel = widget.contentViewModel;
 
-  Widget _buildPricingCard({
-    required String title,
-    required Color titleColor,
-    required String price,
-    required String description,
-    required List<String> features,
-    required Color color,
-    required Color textColor,
-    required Color dividerColor,
-    required Color checkCircleColor,
-    Color? borderColor,
-    required Color buttonContentColor,
-  }) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -237,12 +186,17 @@ class _PricePageState extends State<PricePage> {
                 onPressed: () {
                   try {
                     if (title == "Lifetime Deal") {
-                      pricingViewmodel
-                          .purchaseAllContent("675bbf18ac9914f7212128f7");
+                      contentViewModel
+                          .purchaseAllContent(userId)
+                          .then((onValue) {
+                            context.go('/content_list');
+                          });
                     } else {
-                      pricingViewmodel.purchaseContent(
-                          "675bbf18ac9914f7212128f7",
-                          "675beec515b742ed2895a34f");
+                      contentViewModel
+                          .purchaseContent(userId, content.id!)
+                          .then((onValue) {
+                            context.go('/content_detail', extra: content);
+                          });
                     }
                   } catch (e) {
                     print("Terjadi kesalahan saat melakukan pembelian: $e");

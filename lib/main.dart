@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fomate_frontend/model/model.dart';
 import 'package:fomate_frontend/view/pages/home_page.dart';
 import 'package:fomate_frontend/view/pages/pages.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,6 +39,14 @@ final router = GoRouter(
     //     Content content = state.extra as Content;
     //     return ContentDetailPage(content: content);
     //   },
+    // ),
+    //  GoRoute(
+    //   path: '/pricing',
+    //   name: 'Pricing Page',
+    //   builder: (context, state) {
+    //     Content content = state.extra as Content;
+    //     return const PricingPage(content: content);
+    //   }
     // ),
   ],
 );

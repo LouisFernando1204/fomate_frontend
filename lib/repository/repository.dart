@@ -1,5 +1,4 @@
-import 'dart:convert';
+import 'package:fomate_frontend/data/network/network_api_services.dart';
+import 'package:fomate_frontend/model/model.dart';
 
-import 'package:http/http.dart' as http;
-
-part 'pricing_repository.dart';
+part 'content_repository.dart';
