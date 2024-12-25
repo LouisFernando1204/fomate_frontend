@@ -12,11 +12,11 @@ class _LoadingPageLogoState extends State<LoadingPageLogo> {
   void initState() {
     super.initState();
     // Automatically navigate to the next page after 3 seconds
-    Future.delayed(const Duration(seconds: 20), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => const BlueLoadingPage(isLastPage: false)),
+            builder: (context) => const BlueLoadingPage1()),
       );
     });
   }
@@ -24,35 +24,38 @@ class _LoadingPageLogoState extends State<LoadingPageLogo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 120),
             Image.asset(
-              'assets/images/FomateLogo.png', // Replace with your actual path
-              height: 150,
+              'assets/images/FomateLogo.png',
+              height: 335,
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Fomate',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'ProzaLibre', // Specify the custom font family
+            Transform.translate(
+              offset: const Offset(0, -55),
+              child: const Text(
+                'Fomate',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: 'ProzaLibre',
+                ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 170),
             const Text(
               'Balance Your Screen, Boost Your Life.',
               style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+                  fontSize: 16,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
-            const CircularProgressIndicator(),
+            // const SizedBox(height: 40),
+            // const CircularProgressIndicator(),
           ],
         ),
       ),
