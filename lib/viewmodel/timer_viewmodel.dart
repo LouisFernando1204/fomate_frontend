@@ -1,10 +1,4 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:app_usage/app_usage.dart';
-import 'package:fomate_frontend/model/app_model.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fomate_frontend/main.dart';
-import 'package:fomate_frontend/utils/colors.dart';
+part of 'viewmodel.dart';
 
 class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   final List<AppModel> apps = [];

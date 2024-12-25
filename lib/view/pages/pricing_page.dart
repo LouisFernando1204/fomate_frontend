@@ -100,12 +100,16 @@ class _PricingPageState extends State<PricingPage> {
           Consumer<ContentViewModel>(
             builder: (context, value, child) {
               if (value.isLoading) {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                        color: AppColors.primaryColor),
-                  ),
-                );
+                return  Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.black12,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.primaryColor),
+                    ),
+                  );
               }
               return Container();
             },

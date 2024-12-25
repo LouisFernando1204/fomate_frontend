@@ -14,6 +14,16 @@ class ContentViewModel with ChangeNotifier {
       setContentList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setContentList(ApiResponse.error(error.toString()));
+      String errorMessage = _getErrorMessage(error.toString());
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     });
   }
 
@@ -30,14 +40,24 @@ class ContentViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> purchaseAllContent(String userId) async {
+  Future<dynamic> purchaseAllContent(
+      BuildContext context, String userId) async {
     setLoading(true);
     _contentRepo.purchaseAllContent(userId).then((value) {
       setInsertedPurchasedAllContentIDs(ApiResponse.completed(value));
-      setLoading(false);
+      context.push('/content_list');
     }).onError((error, stackTrace) {
       setInsertedPurchasedAllContentIDs(ApiResponse.error(error.toString()));
-      setLoading(false);
+      String errorMessage = _getErrorMessage(error.toString());
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }).whenComplete(() {
       setLoading(false);
     });
@@ -49,14 +69,24 @@ class ContentViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> purchaseContent(String userId, String contentId) async {
+  Future<dynamic> purchaseContent(
+      BuildContext context, String userId, String contentId) async {
     setLoading(true);
     _contentRepo.purchaseContent(userId, contentId).then((value) {
       setInsertedPurchasedContentID(ApiResponse.completed(value));
-      setLoading(false);
+      context.push('/content_detail/${contentId}');
     }).onError((error, stackTrace) {
       setInsertedPurchasedContentID(ApiResponse.error(error.toString()));
-      setLoading(false);
+      String errorMessage = _getErrorMessage(error.toString());
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }).whenComplete(() {
       setLoading(false);
     });
@@ -73,6 +103,26 @@ class ContentViewModel with ChangeNotifier {
       setPurchasedContents(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setPurchasedContents(ApiResponse.error(error.toString()));
+      String errorMessage = _getErrorMessage(error.toString());
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     });
+  }
+
+  String _getErrorMessage(String error) {
+    final regex = RegExp(r'{"error":"(.*?)"}');
+    final match = regex.firstMatch(error);
+
+    if (match != null && match.group(1) != null) {
+      return match.group(1)!;
+    }
+    return 'Unknown error';
   }
 }

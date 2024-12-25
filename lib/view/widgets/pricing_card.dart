@@ -186,15 +186,12 @@ class _PricingCardState extends State<PricingCard> {
                 onPressed: () async {
                   try {
                     if (title == "Lifetime Deal") {
-                      await contentViewModel.purchaseAllContent(userId);
-                      context.push('/content_list');
+                      await contentViewModel.purchaseAllContent(context, userId);
                     } else {
-                      print("MASUK KE SINGLE DEAL!");
-                      await contentViewModel.purchaseContent(userId, contentId);
-                      context.push('/content_detail/${contentId}');
+                      await contentViewModel.purchaseContent(context, userId, contentId);
                     }
                   } catch (e) {
-                    print("Terjadi kesalahan saat melakukan pembelian: $e");
+                    print("Error while purchasing content: $e");
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fomate_frontend/model/app_model.dart';
-import 'package:fomate_frontend/viewmodel/timer_viewmodel.dart';
+import 'package:fomate_frontend/viewmodel/viewmodel.dart';
 import 'package:fomate_frontend/utils/colors.dart';
 
 class HomePage extends StatefulWidget {

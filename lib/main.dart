@@ -27,7 +27,58 @@ final router = GoRouter(
       name: 'Loading Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
-          child: ContentListPage(),
+          child: RegisterPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = CurveTween(curve: Curves.easeInOut);
+            var fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+     GoRoute(
+      path: '/register',
+      name: 'Register Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          child: RegisterPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = CurveTween(curve: Curves.easeInOut);
+            var fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+     GoRoute(
+      path: '/login',
+      name: 'Login Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          child: LoginPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = CurveTween(curve: Curves.easeInOut);
+            var fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+     GoRoute(
+      path: '/home',
+      name: 'Home Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          child: HomePage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var tween = CurveTween(curve: Curves.easeInOut);
             var fadeAnimation = animation.drive(tween);
