@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fomate_frontend/model/model.dart';
-import 'package:fomate_frontend/view/pages/home_page.dart';
+import 'package:fomate_frontend/view/pages/additionaltohome_page.dart';
 import 'package:fomate_frontend/view/pages/pages.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
