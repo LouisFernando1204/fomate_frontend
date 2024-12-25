@@ -6,3 +6,4 @@ import 'package:go_router/go_router.dart';
 
 part 'content_card.dart';
 part 'pricing_card.dart';
+part 'checklist.dart';

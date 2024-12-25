@@ -10,7 +10,7 @@ class ContentViewModel with ChangeNotifier {
   }
 
   Future<dynamic> getContentList(String userId) async {
-    _contentRepo.fetchAllContent(userId).then((value) {
+    _contentRepo.getContentList(userId).then((value) {
       setContentList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setContentList(ApiResponse.error(error.toString()));
@@ -31,12 +31,15 @@ class ContentViewModel with ChangeNotifier {
   }
 
   Future<dynamic> purchaseAllContent(String userId) async {
+    setLoading(true);
     _contentRepo.purchaseAllContent(userId).then((value) {
-      setLoading(true);
       setInsertedPurchasedAllContentIDs(ApiResponse.completed(value));
       setLoading(false);
     }).onError((error, stackTrace) {
       setInsertedPurchasedAllContentIDs(ApiResponse.error(error.toString()));
+      setLoading(false);
+    }).whenComplete(() {
+      setLoading(false);
     });
   }
 
@@ -47,12 +50,29 @@ class ContentViewModel with ChangeNotifier {
   }
 
   Future<dynamic> purchaseContent(String userId, String contentId) async {
+    setLoading(true);
     _contentRepo.purchaseContent(userId, contentId).then((value) {
-      setLoading(true);
       setInsertedPurchasedContentID(ApiResponse.completed(value));
       setLoading(false);
     }).onError((error, stackTrace) {
       setInsertedPurchasedContentID(ApiResponse.error(error.toString()));
+      setLoading(false);
+    }).whenComplete(() {
+      setLoading(false);
+    });
+  }
+
+  ApiResponse<List<dynamic>> purchasedContents = ApiResponse.loading();
+  setPurchasedContents(ApiResponse<List<dynamic>> response) {
+    purchasedContents = response;
+    notifyListeners();
+  }
+
+  Future<dynamic> checkPurchasedContent(String userId, String contentId) async {
+    _contentRepo.checkPurchasedContent(userId, contentId).then((value) {
+      setPurchasedContents(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setPurchasedContents(ApiResponse.error(error.toString()));
     });
   }
 }

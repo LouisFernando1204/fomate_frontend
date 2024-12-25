@@ -12,7 +12,7 @@ class PricingCard extends StatefulWidget {
   final Color checkCircleColor;
   final Color? borderColor;
   final Color buttonContentColor;
-  final Content content;
+  final String contentId;
   final String userId;
   final ContentViewModel contentViewModel;
   const PricingCard(
@@ -27,7 +27,7 @@ class PricingCard extends StatefulWidget {
     this.checkCircleColor,
     this.borderColor,
     this.buttonContentColor,
-    this.content,
+    this.contentId,
     this.userId,
     this.contentViewModel,
   );
@@ -50,7 +50,7 @@ class _PricingCardState extends State<PricingCard> {
     Color checkCircleColor = widget.checkCircleColor;
     Color borderColor = widget.borderColor!;
     Color buttonContentColor = widget.buttonContentColor;
-    Content content = widget.content;
+    String contentId = widget.contentId;
     String userId = widget.userId;
     ContentViewModel contentViewModel = widget.contentViewModel;
 
@@ -71,7 +71,7 @@ class _PricingCardState extends State<PricingCard> {
             : null,
         boxShadow: [
           BoxShadow(
-            color: AppColors.textColor_1.withOpacity(0.1),
+            color: AppColors.textColor_1.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -183,20 +183,15 @@ class _PricingCardState extends State<PricingCard> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   try {
                     if (title == "Lifetime Deal") {
-                      contentViewModel
-                          .purchaseAllContent(userId)
-                          .then((onValue) {
-                            context.go('/content_list');
-                          });
+                      await contentViewModel.purchaseAllContent(userId);
+                      context.push('/content_list');
                     } else {
-                      contentViewModel
-                          .purchaseContent(userId, content.id!)
-                          .then((onValue) {
-                            context.go('/content_detail', extra: content);
-                          });
+                      print("MASUK KE SINGLE DEAL!");
+                      await contentViewModel.purchaseContent(userId, contentId);
+                      context.push('/content_detail/${contentId}');
                     }
                   } catch (e) {
                     print("Terjadi kesalahan saat melakukan pembelian: $e");

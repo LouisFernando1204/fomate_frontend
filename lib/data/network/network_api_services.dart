@@ -30,9 +30,9 @@ class NetworkApiServices implements BaseApiServices {
       print("DATA");
       print(data);
       final response = await http.post(
-        Uri.https(Const.baseUrl, endpoint),
+        Uri.http(Const.baseUrl, endpoint),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
+          'Content-Type': 'application/json'
         },
         body: jsonEncode(data),
       );

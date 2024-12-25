@@ -25,29 +25,91 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       name: 'Loading Page',
-      builder: (context, state) => const ContentListPage(),
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          child: ContentListPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = CurveTween(curve: Curves.easeInOut);
+            var fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      },
     ),
     GoRoute(
       path: '/content_list',
       name: 'Content List Page',
-      builder: (context, state) => const ContentListPage(),
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          child: ContentListPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
     ),
-    // GoRoute(
-    //   path: '/content_detail',
-    //   name: 'Content Detail Page',
-    //   builder: (context, state) {
-    //     Content content = state.extra as Content;
-    //     return ContentDetailPage(content: content);
-    //   },
-    // ),
-    //  GoRoute(
-    //   path: '/pricing',
-    //   name: 'Pricing Page',
-    //   builder: (context, state) {
-    //     Content content = state.extra as Content;
-    //     return const PricingPage(content: content);
-    //   }
-    // ),
+    GoRoute(
+      path: '/content_detail/:contentId',
+      name: 'Content Detail Page',
+      pageBuilder: (context, state) {
+        final contentId = state.pathParameters['contentId'].toString();
+        return CustomTransitionPage(
+          child: ContentDetailPage(contentId: contentId),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/pricing/:contentId',
+      name: 'Pricing Page',
+      pageBuilder: (context, state) {
+        final contentId = state.pathParameters['contentId'].toString();
+        return CustomTransitionPage(
+          child: PricingPage(contentId: contentId),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
   ],
 );
 

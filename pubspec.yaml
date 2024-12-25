@@ -28,12 +28,14 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  animations: ^2.0.11
   app_usage: ^3.0.1
   cupertino_icons: ^1.0.8
   double_back_to_close: ^2.0.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
+  flutter_inappwebview: ^6.1.5
   flutter_local_notifications: ^18.0.1
   flutter_spinkit: ^5.2.1
   fluttertoast: ^8.2.8
@@ -43,6 +45,7 @@ dependencies:
   permission_handler: ^11.3.1
   provider: ^6.1.2
   shared_preferences: ^2.3.4
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_lints: ^4.0.0

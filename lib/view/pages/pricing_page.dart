@@ -1,8 +1,8 @@
 part of 'pages.dart';
 
 class PricingPage extends StatefulWidget {
-  final Content content;
-  const PricingPage(this.content);
+  final String contentId;
+  const PricingPage({required this.contentId});
 
   @override
   State<PricingPage> createState() => _PricingPageState();
@@ -20,7 +20,7 @@ class _PricingPageState extends State<PricingPage> {
 
   @override
   Widget build(BuildContext context) {
-    Content content = widget.content;
+    String contentId = widget.contentId;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -32,7 +32,7 @@ class _PricingPageState extends State<PricingPage> {
           },
           icon: const Icon(
             Icons.arrow_back,
-            color: AppColors.textColor_0, 
+            color: AppColors.textColor_0,
           ),
         ),
         title: const Text(
@@ -40,25 +40,22 @@ class _PricingPageState extends State<PricingPage> {
           style: TextStyle(
             color: AppColors.textColor_0,
             fontFamily: 'Poppins',
-            fontSize: 22,
+            fontSize: 20,
           ),
         ),
       ),
       body: ChangeNotifierProvider<ContentViewModel>(
         create: (context) => contentViewModel,
-        child: Stack(
-          children: [
-            Container(
+        child: Stack(children: [
+          Container(
             color: Colors.white,
-            child: ChangeNotifierProvider<ContentViewModel>(
-              create: (_) => contentViewModel,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      PricingCard(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    PricingCard(
                         "Lifetime Deal",
                         AppColors.textColor_1,
                         "Rp. 149.900,00",
@@ -73,12 +70,11 @@ class _PricingPageState extends State<PricingPage> {
                         AppColors.textColor_0,
                         AppColors.textColor_0,
                         AppColors.primaryColor,
-                        content,
+                        contentId,
                         userId,
-                        contentViewModel
-                      ),
-                      const SizedBox(height: 16),
-                      PricingCard(
+                        contentViewModel),
+                    const SizedBox(height: 16),
+                    PricingCard(
                         "Single Deal",
                         AppColors.textColor_1,
                         "Rp. 79.900,00",
@@ -91,32 +87,30 @@ class _PricingPageState extends State<PricingPage> {
                         AppColors.primaryColor,
                         AppColors.textColor_1,
                         AppColors.textColor_1,
-                        AppColors.primaryColor,
                         AppColors.textColor_0,
-                        content,
+                        AppColors.textColor_0,
+                        contentId,
                         userId,
-                        contentViewModel
-                      ),
-                    ],
-                  ),
+                        contentViewModel),
+                  ],
                 ),
               ),
             ),
           ),
-            Consumer<ContentViewModel>(
-                  builder: (context, value, child) {
-                    if (value.isLoading) {
-                      return Container(
-                        child: Center(
-                          child: CircularProgressIndicator(color: AppColors.primaryColor),
-                        ),
-                      );
-                    }
-                    return Container();
-                  },
-                )
-          ]
-        ),
+          Consumer<ContentViewModel>(
+            builder: (context, value, child) {
+              if (value.isLoading) {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.primaryColor),
+                  ),
+                );
+              }
+              return Container();
+            },
+          )
+        ]),
       ),
     );
   }

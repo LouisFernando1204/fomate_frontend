@@ -3,10 +3,10 @@ part of 'repository.dart';
 class ContentRepository {
   final _apiServices = NetworkApiServices();
 
-  Future<List<Content>> fetchAllContent(String userId) async {
+  Future<List<Content>> getContentList(String userId) async {
     try {
-      dynamic unpurchasedResponse = await _apiServices.getApiResponse(
-          '/api/get_unpurchased_content/${userId}');
+      dynamic unpurchasedResponse = await _apiServices
+          .getApiResponse('/api/get_unpurchased_content/${userId}');
       List<Content> unpurchasedContent = [];
       if (unpurchasedResponse != null) {
         unpurchasedContent = (unpurchasedResponse as List)
@@ -15,8 +15,8 @@ class ContentRepository {
         print("Unpurchased content retrieved: $unpurchasedContent");
       }
 
-      dynamic purchasedResponse = await _apiServices.getApiResponse(
-          '/api/get_purchased_content/${userId}');
+      dynamic purchasedResponse = await _apiServices
+          .getApiResponse('/api/get_purchased_content/${userId}');
       List<Content> purchasedContent = [];
       if (purchasedResponse != null) {
         purchasedContent = (purchasedResponse as List)
@@ -37,7 +37,7 @@ class ContentRepository {
 
   Future<List<String>> purchaseAllContent(String userId) async {
     try {
-      Map<String, dynamic> requestBody = {
+      Map<String, String> requestBody = {
         "userId": userId,
       };
 
@@ -62,7 +62,7 @@ class ContentRepository {
 
   Future<String> purchaseContent(String userId, String contentId) async {
     try {
-      Map<String, dynamic> requestBody = {
+      Map<String, String> requestBody = {
         "userId": userId,
         "contentId": contentId
       };
@@ -82,6 +82,49 @@ class ContentRepository {
     } catch (e) {
       print("An error occurred: $e");
       throw Exception('Error purchasing content: $e');
+    }
+  }
+
+  Future<List<dynamic>?> checkPurchasedContent(
+      String userId, String contentId) async {
+    try {
+      dynamic response = await _apiServices
+          .getApiResponse('/api/get_purchased_content/${userId}');
+
+      if (response != null) {
+        var purchasedContent = response.firstWhere(
+          (content) => content['id'] == contentId,
+          orElse: () => null,
+        );
+
+        if (purchasedContent != null) {
+          return [Content.fromJson(purchasedContent), true];
+        } else {
+          dynamic unpurchasedResponse = await _apiServices
+              .getApiResponse('/api/get_unpurchased_content/${userId}');
+
+          if (unpurchasedResponse != null) {
+            var unpurchasedContent = unpurchasedResponse.firstWhere(
+              (content) => content['id'] == contentId,
+              orElse: () => null,
+            );
+
+            if (unpurchasedContent != null) {
+              return [Content.fromJson(unpurchasedContent), false];
+            } else {
+              return null;
+            }
+          } else {
+            throw Exception('Failed to retrieve unpurchased contents.');
+          }
+        }
+      } else {
+        throw Exception(
+            response['message'] ?? 'Failed to retrieve purchased contents.');
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+      return null;
     }
   }
 }

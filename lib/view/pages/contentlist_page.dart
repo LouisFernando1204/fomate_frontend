@@ -10,9 +10,11 @@ class ContentListPage extends StatefulWidget {
 class _ContentListPageState extends State<ContentListPage> {
   ContentViewModel contentViewModel = ContentViewModel();
 
+  String userId = "676a498e14808629f4d44778";
+
   @override
   void initState() {
-    contentViewModel.getContentList("676a498e14808629f4d44778");
+    contentViewModel.getContentList(userId);
     super.initState();
   }
 
@@ -85,8 +87,7 @@ class _ContentListPageState extends State<ContentListPage> {
                             var content = value.contentList.data![index];
                             return GestureDetector(
                                 onTap: () {
-                                  context.go('/content_detail/',
-                                      extra: content);
+                                  context.push('/content_detail/${content.id}');
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 8.0),
