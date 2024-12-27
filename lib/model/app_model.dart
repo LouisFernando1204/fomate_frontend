@@ -1,15 +1,17 @@
+part of 'model.dart';
+
 class AppModel {
-  final String packageName;
-  final String name;
-  int usageDuration;
+  String packageName;
+  String appName;
+  String startTime;
+  String endTime;
+  int timer;
 
   AppModel({
     required this.packageName,
-    required this.name,
-    this.usageDuration = 0,
+    required this.appName,
+    this.startTime = "",
+    this.endTime = "",
+    this.timer = 0,
   });
-
-  void updateUsageDuration(int duration) {
-    usageDuration += duration;
-  }
 }

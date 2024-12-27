@@ -11,18 +11,60 @@ class PricingPage extends StatefulWidget {
 class _PricingPageState extends State<PricingPage> {
   ContentViewModel contentViewModel = ContentViewModel();
 
-  String userId = "676a498e14808629f4d44778";
+  String? userId;
 
   @override
   void initState() {
     super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    var userData = await UserLocalStorage.getUserData();
+    setState(() {
+      userId = userData?.id;
+    });
+    if (userId != null) {
+      print("USER ID: " + userId!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     String contentId = widget.contentId;
 
+    if (userId == null) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryColor,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: AppColors.textColor_0,
+            ),
+          ),
+          title: const Text(
+            "Pricing",
+            style: TextStyle(
+              color: AppColors.textColor_0,
+              fontFamily: 'Poppins',
+              fontSize: 20,
+            ),
+          ),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.primaryColor),
+        ),
+      );
+    }
+
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -48,7 +90,6 @@ class _PricingPageState extends State<PricingPage> {
         create: (context) => contentViewModel,
         child: Stack(children: [
           Container(
-            color: Colors.white,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -71,7 +112,7 @@ class _PricingPageState extends State<PricingPage> {
                         AppColors.textColor_0,
                         AppColors.primaryColor,
                         contentId,
-                        userId,
+                        userId!,
                         contentViewModel),
                     const SizedBox(height: 16),
                     PricingCard(
@@ -90,7 +131,7 @@ class _PricingPageState extends State<PricingPage> {
                         AppColors.textColor_0,
                         AppColors.textColor_0,
                         contentId,
-                        userId,
+                        userId!,
                         contentViewModel),
                   ],
                 ),
@@ -100,16 +141,16 @@ class _PricingPageState extends State<PricingPage> {
           Consumer<ContentViewModel>(
             builder: (context, value, child) {
               if (value.isLoading) {
-                return  Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.black12,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                          color: AppColors.primaryColor),
-                    ),
-                  );
+                return Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black12,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.primaryColor),
+                  ),
+                );
               }
               return Container();
             },

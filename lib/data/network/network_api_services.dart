@@ -27,18 +27,12 @@ class NetworkApiServices implements BaseApiServices {
   Future<dynamic> postApiResponse(String endpoint, dynamic data) async {
     dynamic responseJson;
     try {
-      print("DATA");
-      print(data);
       final response = await http.post(
         Uri.http(Const.baseUrl, endpoint),
-        headers: <String, String>{
-          'Content-Type': 'application/json'
-        },
+        headers: <String, String>{'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
       responseJson = returnResponse(response);
-      print("RESPONSE");
-      print(responseJson);
       return responseJson;
     } on SocketException {
       throw NoInternetException('No internet connection!');

@@ -186,9 +186,11 @@ class _PricingCardState extends State<PricingCard> {
                 onPressed: () async {
                   try {
                     if (title == "Lifetime Deal") {
-                      await contentViewModel.purchaseAllContent(context, userId);
+                      await contentViewModel.purchaseAllContent(
+                          context, userId);
                     } else {
-                      await contentViewModel.purchaseContent(context, userId, contentId);
+                      await contentViewModel.purchaseContent(
+                          context, userId, contentId);
                     }
                   } catch (e) {
                     print("Error while purchasing content: $e");

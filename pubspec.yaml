@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_inappwebview: ^6.1.5
+  flutter_launcher_icons: ^0.14.2
   flutter_local_notifications: ^18.0.1
   flutter_spinkit: ^5.2.1
   fluttertoast: ^8.2.8
@@ -52,6 +53,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/fomate_icon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/fomate_icon.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
@@ -63,8 +71,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/FomateLogo.png
+    - assets/images/fomate_icon.png
+    - assets/images/fomate_logo.png
     - assets/images/BlueAvatar.png
+    - assets/images/AvatarAsset1.png
+    - assets/images/AvatarAsset2.png
+    - assets/images/AvatarAsset3.png
+    - assets/images/AvatarAsset4.png
+    - assets/images/AvatarAsset5.png
 
   fonts:
     - family: ProzaLibre

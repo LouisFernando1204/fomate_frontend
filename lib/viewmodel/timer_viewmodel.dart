@@ -6,6 +6,9 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   Map<String, DateTime> appStartTimes = {};
   int timerDuration = 5;
   bool isMonitoring = false;
+  bool isTestingMode = true;
+  bool scheduleAdded = false;
+  bool isNotificationInProgress = false;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -14,6 +17,8 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _initializeNotifications();
   }
+
+  HomeViewModel homeViewModel = HomeViewModel();
 
   void _initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -32,38 +37,71 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
     super.dispose();
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      for (final appName in appStartTimes.keys) {
-        final startTime = appStartTimes[appName]!;
-        print("Start time: ${startTime}");
+      await flutterLocalNotificationsPlugin.cancelAll();
+      final appNames = List<String>.from(appStartTimes.keys);
+      print("APP NAMES LENGTH: " + appNames.length.toString());
 
+      for (final appName in appNames) {
+        if (scheduleAdded) break;
+        final startTime = appStartTimes[appName]!;
+        final endTime = DateTime.now();
         final usageDuration = DateTime.now().difference(startTime).inMinutes;
-        print("USAGE DURATION (in minutes): $usageDuration");
 
         final app = apps.firstWhere(
-          (app) => app.name == appName,
-          orElse: () => AppModel(packageName: appName, name: appName),
+          (app) => app.appName == appName,
+          orElse: () => AppModel(packageName: appName, appName: appName),
         );
 
-        app.updateUsageDuration(usageDuration);
+        app.startTime = startTime.toString();
+        app.endTime = endTime.toString();
+        app.timer = timerDuration;
 
-        print("APP NAME: " + app.name);
-        print("APP USAGE DURATION: " + app.usageDuration.toString());
+        print("App Name " + app.appName);
+        print("Start Time: ${startTime}");
+        print("End Time: ${endTime}");
+        print("Timer Duration: ${timerDuration}");
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final currentContext = navigatorKey.currentContext;
+          print("CURRENT CONTEXT: ${currentContext}");
           if (currentContext != null) {
             _showUsagePopup(currentContext, appName, startTime, usageDuration);
           }
         });
+
+        var userData = await UserLocalStorage.getUserData();
+        await homeViewModel.addSchedule(
+            userData!.id!, appName, app.startTime, app.endTime, app.timer);
+
+        int newHealth;
+        final delay = usageDuration - timerDuration;
+
+        if (delay <= 0) {
+          newHealth = 100;
+        } else if (delay > 0 && delay <= 10) {
+          newHealth = 90;
+        } else if (delay > 10 && delay <= 30) {
+          newHealth = 70;
+        } else if (delay > 30 && delay <= 60) {
+          newHealth = 50;
+        } else {
+          newHealth = 30;
+        }
+        print("Delay: $delay minutes, New Health: $newHealth");
+
+        await homeViewModel.updateHealth(userData!.id!, newHealth);
+
+        scheduleAdded = true;
 
         removeApp(app);
         print("APP LIST: " + apps.toString());
       }
       stopMonitoring();
     } else if (state == AppLifecycleState.paused) {
-      if (apps.length > 0) {
+      scheduleAdded = false;
+      if (apps.isNotEmpty) {
         startMonitoring();
       }
     }
@@ -76,10 +114,11 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
     final endFormatted =
         "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
 
-    showDialog(
+    await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: AppColors.backgroundColor,
           title: Text('Usage Summary'),
           content: Text(
               'You\'ve been using ${appName[0].toUpperCase() + appName.substring(1)}\n\n'
@@ -88,9 +127,9 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
               'Duration: $usageDuration minute(s).'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop(true),
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.secondaryColor, // Set warna teks
+                foregroundColor: AppColors.secondaryColor,
               ),
               child: const Text('Done'),
             ),
@@ -110,6 +149,26 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       final now = DateTime.now();
+
+      if (isNotificationInProgress) return;
+
+      if (isTestingMode) {
+        print("In Testing Mode!");
+        final app = apps[0];
+        appStartTimes[app.appName] ??= now;
+
+        final startTime = appStartTimes[app.appName]!;
+        print("START TIME: " + startTime.toString());
+        final usageDuration = now.difference(startTime).inMinutes;
+        print("USAGE DURATION: " + usageDuration.toString());
+
+        if (usageDuration >= timerDuration) {
+          print("CURRENT APP FINAL: " + app.appName);
+          _showNotification(app.appName, usageDuration);
+        }
+        return;
+      }
+
       final appUsage = await AppUsage().getAppUsage(
         now.subtract(const Duration(seconds: 1)),
         now,
@@ -120,7 +179,7 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
         AppUsageInfo? currentApp;
 
         for (var usage in appUsage) {
-          if (apps.any((app) => app.name == usage.appName)) {
+          if (apps.any((app) => app.appName == usage.appName)) {
             currentApp = usage;
             break;
           }
@@ -162,6 +221,8 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
   }
 
   Future<void> _showNotification(String appName, int usageDuration) async {
+    isNotificationInProgress = true;
+
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails('usage_timer_channel', 'Usage Timer',
             channelDescription: 'Notification for application usage time limit',
@@ -179,6 +240,12 @@ class TimerViewModel with ChangeNotifier, WidgetsBindingObserver {
       'You\'ve been using ${appName[0].toUpperCase() + appName.substring(1)} for ${usageDuration.toString()} minute(s)!',
       notificationDetails,
     );
+
+    isNotificationInProgress = false;
+  }
+
+  List<AppModel> getAllApps() {
+    return apps;
   }
 
   void addApp(AppModel app) {

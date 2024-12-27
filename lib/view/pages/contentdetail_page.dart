@@ -11,14 +11,24 @@ class ContentDetailPage extends StatefulWidget {
 class _ContentDetailPageState extends State<ContentDetailPage> {
   ContentViewModel contentViewModel = ContentViewModel();
 
-  String userId = "676a498e14808629f4d44778";
+  String? userId;
 
   @override
   void initState() {
     super.initState();
-    contentViewModel = ContentViewModel();
-    String contentId = widget.contentId;
-    contentViewModel.checkPurchasedContent(userId, contentId);
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    var userData = await UserLocalStorage.getUserData();
+    setState(() {
+      userId = userData?.id;
+    });
+    if (userId != null) {
+      print("USER ID: " + userId!);
+      String contentId = widget.contentId;
+      contentViewModel.checkPurchasedContent(userId!, contentId);
+    }
   }
 
   @override
@@ -26,6 +36,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
     String contentId = widget.contentId;
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
@@ -213,7 +224,7 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                           for (var insight in value
                               .purchasedContents.data![0].contentInsights!)
                             Checklist(insight),
-                        SizedBox(height: 32),
+                        SizedBox(height: 28),
                         if (value.purchasedContents.data![1] == false)
                           Container(
                             width: double.infinity,
@@ -238,6 +249,31 @@ class _ContentDetailPageState extends State<ContentDetailPage> {
                               ),
                               onPressed: () {
                                 context.push('/pricing/${contentId}');
+                              },
+                            ),
+                          )
+                        else
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              label: Text(
+                                "Done",
+                                style: TextStyle(
+                                    color: AppColors.textColor_0,
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondaryColor,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                              ),
+                              onPressed: () {
+                                context.go('/mainmenu');
                               },
                             ),
                           )

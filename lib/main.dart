@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fomate_frontend/model/model.dart';
-import 'package:fomate_frontend/view/pages/additionaltohome_page.dart';
 import 'package:fomate_frontend/view/pages/pages.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
@@ -17,18 +15,24 @@ Future<void> main() async {
     }
   });
   await initializeDateFormatting('id_ID', null);
-  runApp(MaterialApp.router(routerConfig: router));
+  runApp(MyApp());
 }
 
 final router = GoRouter(
+  navigatorKey: navigatorKey,
   routes: [
     GoRoute(
       path: '/',
-      name: 'Loading Page',
+      name: 'Logo Loading Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
-          child: RegisterPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: LogoLoadingPage(),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             var tween = CurveTween(curve: Curves.easeInOut);
             var fadeAnimation = animation.drive(tween);
             return FadeTransition(
@@ -39,51 +43,112 @@ final router = GoRouter(
         );
       },
     ),
-     GoRoute(
+    GoRoute(
+      path: '/blueloading1',
+      name: 'Blue Loading 1 Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: BlueLoading1Page(),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/blueloading2',
+      name: 'Blue Loading 2 Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: BlueLoading2Page(),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
       path: '/register',
       name: 'Register Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
           child: RegisterPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = CurveTween(curve: Curves.easeInOut);
-            var fadeAnimation = animation.drive(tween);
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             return FadeTransition(
-              opacity: fadeAnimation,
+              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
               child: child,
             );
           },
         );
       },
     ),
-     GoRoute(
+    GoRoute(
       path: '/login',
       name: 'Login Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
           child: LoginPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = CurveTween(curve: Curves.easeInOut);
-            var fadeAnimation = animation.drive(tween);
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             return FadeTransition(
-              opacity: fadeAnimation,
+              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
               child: child,
             );
           },
         );
       },
     ),
-     GoRoute(
-      path: '/home',
-      name: 'Home Page',
+    GoRoute(
+      path: '/mainmenu',
+      name: 'Main Menu Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
-          child: HomePage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var tween = CurveTween(curve: Curves.easeInOut);
-            var fadeAnimation = animation.drive(tween);
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: MainMenuPage(),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             return FadeTransition(
-              opacity: fadeAnimation,
+              opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
               child: child,
             );
           },
@@ -95,16 +160,19 @@ final router = GoRouter(
       name: 'Content List Page',
       pageBuilder: (context, state) {
         return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
           child: ContentListPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             const begin = Offset(0.0, 1.0);
             const end = Offset.zero;
             const curve = Curves.easeInOut;
-
             var tween =
                 Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
             var offsetAnimation = animation.drive(tween);
-
             return SlideTransition(
               position: offsetAnimation,
               child: child,
@@ -119,16 +187,19 @@ final router = GoRouter(
       pageBuilder: (context, state) {
         final contentId = state.pathParameters['contentId'].toString();
         return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
           child: ContentDetailPage(contentId: contentId),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             const begin = Offset(0.0, 1.0);
             const end = Offset.zero;
             const curve = Curves.easeInOut;
-
             var tween =
                 Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
             var offsetAnimation = animation.drive(tween);
-
             return SlideTransition(
               position: offsetAnimation,
               child: child,
@@ -143,16 +214,19 @@ final router = GoRouter(
       pageBuilder: (context, state) {
         final contentId = state.pathParameters['contentId'].toString();
         return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
           child: PricingPage(contentId: contentId),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
             const begin = Offset(0.0, 1.0);
             const end = Offset.zero;
             const curve = Curves.easeInOut;
-
             var tween =
                 Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
             var offsetAnimation = animation.drive(tween);
-
             return SlideTransition(
               position: offsetAnimation,
               child: child,
@@ -169,15 +243,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
+    return MaterialApp.router(
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Fomate',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
     );
   }
 }

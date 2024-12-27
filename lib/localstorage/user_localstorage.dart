@@ -1,31 +1,15 @@
 import 'dart:convert';
+import 'package:fomate_frontend/model/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserLocalStorage {
   static const String _userKey = 'user_data';
 
-  static Future<void> saveUserData({
-    required String id,
-    required String username,
-    required String email,
-    required String password,
-    required int health,
-  }) async {
+  static Future<void> saveUserData(User user) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      Map<String, dynamic> userData = {
-        'id': id,
-        'username': username,
-        'email': email,
-        'password': password,
-        'health': health,
-      };
-
-      String userJson = jsonEncode(userData);
-
+      String userJson = jsonEncode(user.toJson());
       await prefs.setString(_userKey, userJson);
-
       print("User data saved successfully.");
     } catch (e) {
       print("Error saving user data: $e");
@@ -33,16 +17,15 @@ class UserLocalStorage {
     }
   }
 
-  static Future<Map<String, dynamic>?> getUserData() async {
+  static Future<User?> getUserData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
       String? userJson = prefs.getString(_userKey);
 
       if (userJson != null) {
         Map<String, dynamic> userData = jsonDecode(userJson);
         print("User data retrieved: $userData");
-        return userData;
+        return User.fromJson(userData);
       } else {
         print("No user data found.");
         return null;

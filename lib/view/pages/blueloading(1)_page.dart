@@ -1,16 +1,22 @@
 part of 'pages.dart';
 
-class BlueLoadingPage1 extends StatelessWidget {
-  const BlueLoadingPage1({Key? key}) : super(key: key);
+class BlueLoading1Page extends StatefulWidget {
+  const BlueLoading1Page({super.key});
+
+  @override
+  State<BlueLoading1Page> createState() => _BlueLoading1PageState();
+}
+
+class _BlueLoading1PageState extends State<BlueLoading1Page> {
+  final title =
+      '\"Fomate helps you stay mindful of your screen time. Set your schedule, get reminders, and keep your digital life in balance.\"';
+  final description = "";
+  final buttonText = "Next";
 
   @override
   Widget build(BuildContext context) {
-    final title =
-        '\"Fomate helps you stay mindful of your screen time. Set your schedule, get reminders, and keep your digital life in balance.\"';
-    final description = "";
-    final buttonText = "Next";
-
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.primaryColor,
       body: Stack(
         children: [
@@ -78,12 +84,7 @@ class BlueLoadingPage1 extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BlueLoadingPage2(),
-                        ),
-                      );
+                      context.go('/blueloading2');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.textColor_1,

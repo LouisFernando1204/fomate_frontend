@@ -4,3 +4,4 @@ import 'package:fomate_frontend/model/model.dart';
 
 part 'content_repository.dart';
 part 'auth_repository.dart';
+part 'home_repository.dart';

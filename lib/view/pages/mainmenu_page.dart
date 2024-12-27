@@ -1,17 +1,16 @@
 part of 'pages.dart';
 
-class MainMenu extends StatefulWidget {
+class MainMenuPage extends StatefulWidget {
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _MainMenuPageState createState() => _MainMenuPageState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _MainMenuPageState extends State<MainMenuPage> {
   int _currentIndex = 0;
 
-  // Add all pages for the bottom navigation
   final List<Widget> _pages = [
-    HomePage(), // Home Page content
-    BlueLoadingPage2(), // Content Page content (if available)
+    HomePage(),
+    ContentListPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -26,12 +25,12 @@ class _MainMenuState extends State<MainMenu> {
       body: _pages[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor, // Background color of the bar
+          color: AppColors.backgroundColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Shadow color
-              blurRadius: 20, // Blur radius of the shadow
-              offset: Offset(0, -5), // Position of the shadow (above the bar)
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              offset: Offset(0, -5),
             ),
           ],
         ),
@@ -48,10 +47,9 @@ class _MainMenuState extends State<MainMenu> {
               label: 'Content',
             ),
           ],
-          selectedItemColor: AppColors.secondaryColor, // Color for the selected item
-          unselectedItemColor: Colors.grey, // Color for unselected items
-          backgroundColor:
-              AppColors.backgroundColor, // Color for the bottom bar
+          selectedItemColor: AppColors.secondaryColor,
+          unselectedItemColor: Colors.grey,
+          backgroundColor: AppColors.backgroundColor,
         ),
       ),
     );

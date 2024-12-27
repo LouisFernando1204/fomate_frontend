@@ -9,7 +9,7 @@
     <string>dev.flutter.background.refresh</string>
 </array>
 	<key>CFBundleDisplayName</key>
-	<string>Fomate Frontend</string>
+	<string>Fomate</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

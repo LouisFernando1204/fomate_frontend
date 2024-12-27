@@ -10,29 +10,32 @@ class ContentListPage extends StatefulWidget {
 class _ContentListPageState extends State<ContentListPage> {
   ContentViewModel contentViewModel = ContentViewModel();
 
-  String userId = "676a498e14808629f4d44778";
+  String? userId;
 
   @override
   void initState() {
-    contentViewModel.getContentList(userId);
     super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    var userData = await UserLocalStorage.getUserData();
+    setState(() {
+      userId = userData?.id;
+    });
+    if (userId != null) {
+      print("USER ID: " + userId!);
+      contentViewModel.getContentList(userId!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppColors.textColor_0,
-          ),
-        ),
         title: const Text(
           "Content",
           style: TextStyle(

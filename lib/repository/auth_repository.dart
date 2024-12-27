@@ -19,7 +19,7 @@ class AuthRepository {
       if (response != null && response['InsertedID'] != null) {
         print("User registered successfully: ${response['InsertedID']}");
 
-        await UserLocalStorage.saveUserData(
+        final user = User(
           id: response['InsertedID'],
           username: username,
           email: email,
@@ -27,7 +27,9 @@ class AuthRepository {
           health: 100,
         );
 
-        return response['InsertedID'];
+        await UserLocalStorage.saveUserData(user);
+
+        return user.id!;
       } else {
         throw Exception("Registration failed. Invalid response from server.");
       }
@@ -37,7 +39,7 @@ class AuthRepository {
     }
   }
 
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<User> login(String email, String password) async {
     try {
       final body = {
         "email": email,
@@ -50,20 +52,11 @@ class AuthRepository {
       if (response != null && response['id'] != null) {
         print("User logged in successfully: ${response['id']}");
 
-        await UserLocalStorage.saveUserData(
-          id: response['id'],
-          username: response['username'],
-          email: response['email'],
-          password: response['password'],
-          health: response['health'],
-        );
+        final user = User.fromJson(response);
 
-        return {
-          "id": response['id'],
-          "username": response['username'],
-          "email": response['email'],
-          "health": response['health'],
-        };
+        await UserLocalStorage.saveUserData(user);
+
+        return user;
       } else {
         throw Exception("Login failed. Invalid credentials.");
       }
