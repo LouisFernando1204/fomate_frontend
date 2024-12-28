@@ -27,13 +27,13 @@ Welcome to **Fomate**, an innovative app designed to help teenagers manage and r
 
 ## 🌟 See Fomate in Action! 📸  
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">  
-    <img src="https://drive.google.com/uc?id=1CW7RbWCQX_07eD7Fc5hWA7xd2rI_GVnH" alt="Screenshot 1" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=17K_7dDhdE-X6H2ahNiFpP0JkhLRKZM_W" alt="Screenshot 2" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=1VM7oi3V3WmrN68K8pMi9KQ3rdYgSUA6y" alt="Screenshot 3" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=1I8U4_kLwH_Va4zpDBJssq3OcOeWpW_8a" alt="Screenshot 4" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=1y7eNJ-nVV4s-ORNhnAoNMrBlF59NUgbi" alt="Screenshot 5" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=1q7LUJsS0RrSFg3Q-6v8xtf6EHb2KtWjt" alt="Screenshot 6" style="width: 70%;"/>  
-    <img src="https://drive.google.com/uc?id=1k1XDwsJDHakXhqP9s9lMQtdN5W-nffD3" alt="Screenshot 7" style="width: 70%;"/>  
+    <img src="https://drive.google.com/uc?id=1CW7RbWCQX_07eD7Fc5hWA7xd2rI_GVnH" alt="Screenshot 1" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=17K_7dDhdE-X6H2ahNiFpP0JkhLRKZM_W" alt="Screenshot 2" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=1VM7oi3V3WmrN68K8pMi9KQ3rdYgSUA6y" alt="Screenshot 3" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=1I8U4_kLwH_Va4zpDBJssq3OcOeWpW_8a" alt="Screenshot 4" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=1y7eNJ-nVV4s-ORNhnAoNMrBlF59NUgbi" alt="Screenshot 5" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=1q7LUJsS0RrSFg3Q-6v8xtf6EHb2KtWjt" alt="Screenshot 6" style="width: 30%;"/>  
+    <img src="https://drive.google.com/uc?id=1k1XDwsJDHakXhqP9s9lMQtdN5W-nffD3" alt="Screenshot 7" style="width: 30%;"/>  
 </div>  
 
 ## 🤝 Contributors  
