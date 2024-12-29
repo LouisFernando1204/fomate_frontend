@@ -17,8 +17,8 @@ Welcome to **Fomate**, an innovative app designed to help teenagers manage and r
 4. **Visual Feedback**: Monitor changes in your avatar and health bar to reflect your progress toward healthier usage habits.  
 
 ## ⚙️ Tech Stack Behind Fomate  
-- 📦 **Backend**: Golang REST API Integration with Background Services  
-- 🎨 **Frontend**: Dart (Flutter)  
+- 📦 **Backend**: Golang Fiber REST API Integration
+- 🎨 **Frontend**: Dart (Flutter) with Background Services  
 
 ## 🚀 Fomate Insights  
 - 💻 **Source Code**: [View Code](https://github.com/LouisFernando1204/fomate-frontend)  
