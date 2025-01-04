@@ -30,7 +30,7 @@ class HomeRepository {
       dynamic response =
           await _apiServices.postApiResponse('/api/update_health', body);
 
-      if (response != null && response['ModifiedCount'] == 1) {
+      if (response != null) {
         print("User health updated successfully.");
         return "Health updated successfully";
       } else {
