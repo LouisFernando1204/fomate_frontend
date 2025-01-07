@@ -183,17 +183,11 @@ class _PricingCardState extends State<PricingCard> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    if (title == "Lifetime Deal") {
-                      await contentViewModel.purchaseAllContent(
-                          context, userId);
-                    } else {
-                      await contentViewModel.purchaseContent(
-                          context, userId, contentId);
-                    }
-                  } catch (e) {
-                    print("Error while purchasing content: $e");
+                onPressed: () {
+                  if (title == "Lifetime Deal") {
+                    context.push('/payment/lifetimedeal');
+                  } else {
+                    context.push('/payment/singledeal/${contentId}');
                   }
                 },
                 style: ElevatedButton.styleFrom(

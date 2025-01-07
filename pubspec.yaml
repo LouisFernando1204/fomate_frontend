@@ -79,6 +79,9 @@ flutter:
     - assets/images/AvatarAsset3.png
     - assets/images/AvatarAsset4.png
     - assets/images/AvatarAsset5.png
+    - assets/images/visa_mastercard.png
+    - assets/images/paypal.png
+    - assets/images/product_image.png
 
   fonts:
     - family: ProzaLibre

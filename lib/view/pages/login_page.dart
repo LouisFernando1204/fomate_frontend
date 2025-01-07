@@ -96,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                                   borderSide: BorderSide(
                                       color: AppColors.secondaryColor,
                                       width: 2.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
                             ),
@@ -126,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                                   borderSide: BorderSide(
                                       color: AppColors.secondaryColor,
                                       width: 2.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(isPasswordVisible
@@ -154,13 +156,26 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: value.isLoading
                                   ? null
                                   : () async {
-                                      try {
-                                        await authViewModel.login(
-                                            context,
-                                            ctrlEmail.text.toString(),
-                                            ctrlPassword.text.toString());
-                                      } catch (e) {
-                                        print("Error while login: $e");
+                                      if (ctrlEmail.text != "" &&
+                                          ctrlPassword.text != "") {
+                                        try {
+                                          await authViewModel.login(
+                                              context,
+                                              ctrlEmail.text.toString(),
+                                              ctrlPassword.text.toString());
+                                        } catch (e) {
+                                          print("Error while login: $e");
+                                        }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Email & Password is empty!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0,
+                                        );
                                       }
                                     },
                               style: ElevatedButton.styleFrom(

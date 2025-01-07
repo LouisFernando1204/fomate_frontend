@@ -534,157 +534,193 @@ Widget _arrangeScheduleButton(
   );
 }
 
-void _showBottomModal(BuildContext context, TimerViewModel timerViewModel,
-    Future<void> Function(String?) saveSelectedApps, HomeViewModel value) {
+void _showBottomModal(
+  BuildContext context,
+  TimerViewModel timerViewModel,
+  Future<void> Function(String?) saveSelectedApps,
+  HomeViewModel value,
+) {
   String? selectedApp;
   int timerDuration = 5;
+  TextEditingController ctrlTimerDuration =
+      TextEditingController(text: timerDuration.toString());
 
-  if (!timerViewModel.getAllApps().isEmpty) {
+  if (timerViewModel.getAllApps().isNotEmpty) {
     showModalBottomSheet(
-        backgroundColor: AppColors.backgroundColor,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, setModalState) {
-            return Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text("You already have a schedule running now!",
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.red),
-                            textAlign: TextAlign.center),
-                      ),
-                    ]));
-          });
-        });
+      isScrollControlled: true,
+      backgroundColor: AppColors.backgroundColor,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(22.0),
+          child: Center(
+            child: Text(
+              "You already have a schedule running now!",
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.red,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      },
+    );
   } else {
     showModalBottomSheet(
+      isScrollControlled: true,
       backgroundColor: AppColors.backgroundColor,
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Social Media App",
-                    style: TextStyle(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Social Media App",
+                      style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textColor_1),
-                  ),
-                  const SizedBox(height: 12),
-                  DropdownButton<String>(
-                    dropdownColor: AppColors.backgroundColor,
-                    isExpanded: true,
-                    value: selectedApp,
-                    hint: const Text(
-                      "Select an App",
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
                         color: AppColors.textColor_1,
                       ),
                     ),
-                    items: value.appList.data != null
-                        ? value.appList.data!.map((app) {
-                            return DropdownMenuItem<String>(
-                              value: app.appName,
-                              child: Text(
-                                app.appName![0].toUpperCase() +
-                                    app.appName!.substring(1),
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: AppColors.textColor_1,
+                    const SizedBox(height: 12),
+                    DropdownButton<String>(
+                      dropdownColor: AppColors.backgroundColor,
+                      isExpanded: true,
+                      value: selectedApp,
+                      hint: const Text(
+                        "Select an App",
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.textColor_1,
+                        ),
+                      ),
+                      items: value.appList.data != null
+                          ? value.appList.data!.map((app) {
+                              return DropdownMenuItem<String>(
+                                value: app.appName,
+                                child: Text(
+                                  app.appName![0].toUpperCase() +
+                                      app.appName!.substring(1),
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.textColor_1,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }).toList()
-                        : [],
-                    onChanged: (String? newValue) {
-                      setModalState(() {
-                        selectedApp = newValue;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Duration (minutes)",
-                    style: TextStyle(
+                              );
+                            }).toList()
+                          : [],
+                      onChanged: (String? newValue) {
+                        setModalState(() {
+                          selectedApp = newValue;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "Duration (minutes)",
+                      style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textColor_1),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          setModalState(() {
-                            if (timerDuration > 1) {
-                              timerDuration--;
-                            }
-                          });
+                        color: AppColors.textColor_1,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setModalState(() {
+                              if (timerDuration > 1) {
+                                timerDuration--;
+                                ctrlTimerDuration.text =
+                                    timerDuration.toString();
+                              }
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: ctrlTimerDuration,
+                            onChanged: (value) {
+                              setModalState(() {
+                                timerDuration =
+                                    int.tryParse(value) ?? timerDuration;
+                              });
+                            },
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              color: AppColors.textColor_1,
+                            ),
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setModalState(() {
+                              timerDuration++;
+                              ctrlTimerDuration.text = timerDuration.toString();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.secondaryColor,
+                        ),
+                        onPressed: () async {
+                          await saveSelectedApps(selectedApp);
+                          timerViewModel.setTimerDuration(timerDuration);
+                          timerDuration = 5;
+                          Navigator.pop(context);
                         },
-                      ),
-                      Text("$timerDuration",
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: AppColors.textColor_1,
-                          )),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () {
-                          setModalState(() {
-                            timerDuration++;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondaryColor,
-                      ),
-                      onPressed: () async {
-                        await saveSelectedApps(selectedApp);
-                        timerViewModel.setTimerDuration(timerDuration);
-                        timerDuration = 5;
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        "Set Timer",
-                        style: TextStyle(
+                        child: const Text(
+                          "Set Timer",
+                          style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textColor_0),
+                            color: AppColors.textColor_0,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20)
+                  ],
+                ),
               ),
             );
           },

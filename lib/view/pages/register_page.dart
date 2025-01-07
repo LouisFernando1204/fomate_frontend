@@ -28,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
             return Stack(
               children: [
                 SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
                   child: Center(
                     child: Container(
                       constraints: BoxConstraints(
@@ -99,6 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     borderSide: BorderSide(
                                         color: AppColors.secondaryColor,
                                         width: 2.0),
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
                               ),
@@ -134,6 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     borderSide: BorderSide(
                                         color: AppColors.secondaryColor,
                                         width: 2.0),
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
                               ),
@@ -164,6 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     borderSide: BorderSide(
                                         color: AppColors.secondaryColor,
                                         width: 2.0),
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   suffixIcon: IconButton(
                                     icon: Icon(isPasswordVisible
@@ -192,14 +196,29 @@ class _RegisterPageState extends State<RegisterPage> {
                                 onPressed: value.isLoading
                                     ? null
                                     : () async {
-                                        try {
-                                          await authViewModel.register(
-                                              context,
-                                              ctrlUsername.text.trim(),
-                                              ctrlEmail.text.trim(),
-                                              ctrlPassword.text.trim());
-                                        } catch (e) {
-                                          print("Error while register: $e");
+                                        if (ctrlUsername.text != "" &&
+                                            ctrlEmail.text != "" &&
+                                            ctrlPassword.text.toString != "") {
+                                          try {
+                                            await authViewModel.register(
+                                                context,
+                                                ctrlUsername.text.trim(),
+                                                ctrlEmail.text.trim(),
+                                                ctrlPassword.text.trim());
+                                          } catch (e) {
+                                            print("Error while register: $e");
+                                          }
+                                        } else {
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                "Username, Email, Password is empty!",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0,
+                                          );
                                         }
                                       },
                                 style: ElevatedButton.styleFrom(

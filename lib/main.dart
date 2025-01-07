@@ -235,6 +235,59 @@ final router = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: '/payment/lifetimedeal',
+      name: 'Payment LifeTimeDeal Page',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: PaymentLifeTimeDealPage(),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
+    GoRoute(
+      path: '/payment/singledeal/:contentId',
+      name: 'Payment SingeDeal Page',
+      pageBuilder: (context, state) {
+        final contentId = state.pathParameters['contentId'].toString();
+        return CustomTransitionPage(
+          key: state.pageKey,
+          transitionDuration: const Duration(seconds: 1),
+          child: PaymentSingleDealPage(contentId: contentId),
+          transitionsBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
+      },
+    ),
   ],
 );
 
